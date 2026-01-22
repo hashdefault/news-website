@@ -1,74 +1,118 @@
 <template>
-  <header class="header">
-    <NavBar />
-  </header>
-  <h1>Portal de notícias</h1>
-  <hr class="divider" />
-  <div class="messages">
-    <div class="alert alert-success" v-if="alertaInscrito" role="alert">
-      <i class="mdi mdi-check"></i>
-      Você receberá noticias toda manhã, obrigado por se inscrever!
-    </div>
-    <div class="alert alert-danger" v-if="alertaNoData" role="alert">
-      <i class="mdi mdi-info"></i>
-      Não foi possível encontrar dados com a pesquisa.
-    </div>
-  </div>
-  <div class="container">
-    <div class="blur-overlay" id="loading">
-      <div class="spinner"></div>
-    </div>
-    <div class='world_news'>
-      <WorldNews />
-    </div>
-    <transition name="fade" mode="out-in">
-      <RouterView />
-    </transition>
-    <div class='live_iframe'>
-      <LiveNews />
+  <div class="app-wrapper">
+    <!-- Stock Ticker -->
+    <StockTicker />
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-top">
+        <div class="header-content">
+          <div class="logo">
+            <router-link to="/" class="logo-link">
+              <i class="mdi mdi-newspaper-variant-outline"></i>
+              <div class="logo-text">
+                <span class="logo-main">News Portal</span>
+                <span class="logo-sub">Notícias em tempo real</span>
+              </div>
+            </router-link>
+          </div>
+          <div class="header-date">
+            <i class="mdi mdi-calendar-today"></i>
+            {{ formattedDate }}
+          </div>
+        </div>
+      </div>
+      <NavBar />
+    </header>
+
+    <!-- Alerts -->
+    <div class="messages" v-if="alertaInscrito || alertaNoData">
+      <div class="alert alert-success" v-if="alertaInscrito" role="alert">
+        <i class="mdi mdi-check-circle"></i>
+        <span>Você receberá notícias toda manhã, obrigado por se inscrever!</span>
+        <button class="alert-close" @click="alertaInscrito = false">
+          <i class="mdi mdi-close"></i>
+        </button>
+      </div>
+      <div class="alert alert-danger" v-if="alertaNoData" role="alert">
+        <i class="mdi mdi-alert-circle"></i>
+        <span>Não foi possível encontrar dados com a pesquisa.</span>
+        <button class="alert-close" @click="alertaNoData = false">
+          <i class="mdi mdi-close"></i>
+        </button>
+      </div>
     </div>
 
-  </div>
-  <div class="footer">
-    <FooterPage />
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="blur-overlay" id="loading">
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <span class="spinner-text">Carregando notícias...</span>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <aside class="sidebar sidebar-left">
+          <WorldNews />
+        </aside>
+
+        <section class="news-main">
+          <transition name="fade" mode="out-in">
+            <RouterView />
+          </transition>
+        </section>
+
+        <aside class="sidebar sidebar-right">
+          <LiveNews />
+          <WeatherWidget />
+        </aside>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <FooterPage />
+    </footer>
   </div>
 </template>
-<script>
 
+<script>
 import NavBar from "./components/NavBar.vue";
 import FooterPage from "./components/FooterPage.vue";
 import WorldNews from "./components/WorldNews.vue";
 import LiveNews from "./components/LiveNews.vue";
+import StockTicker from "./components/StockTicker.vue";
+import WeatherWidget from "./components/WeatherWidget.vue";
+
 export default {
   name: "App",
   data() {
     return {
       alertaInscrito: false,
       alertaNoData: false,
+      formattedDate: ''
     };
   },
   created() {
-    document.title = "News Website";
+    document.title = "News Portal - Últimas Notícias";
+    this.updateDate();
   },
   mounted() {
-    this.alertaInscrito = sessionStorage.getItem("subscribed") ? sessionStorage.getItem("subscribed") : false;
-    this.alertaNoData = sessionStorage.getItem("nodata") ? sessionStorage.getItem("nodata") : false;
-    sessionStorage.clear()
+    this.alertaInscrito = sessionStorage.getItem("subscribed") ? true : false;
+    this.alertaNoData = sessionStorage.getItem("nodata") ? true : false;
+    sessionStorage.clear();
   },
   methods: {
-    beforeEnter(el) {
-      el.style.opacity = 0;
-    },
-    enter(el, done) {
-      setTimeout(() => {
-        el.style.opacity = 1;
-        done();
-      }, 500);
-    },
-    leave(el, done) {
-      el.style.opacity = 0;
-      setTimeout(done, 500);
-    },
+    updateDate() {
+      const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      };
+      this.formattedDate = new Date().toLocaleDateString('pt-BR', options);
+    }
   },
   watch: {
     $route() {
@@ -80,67 +124,241 @@ export default {
     NavBar,
     FooterPage,
     WorldNews,
-    LiveNews
-  },
+    LiveNews,
+    StockTicker,
+    WeatherWidget
+  }
 };
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Jersey+25&family=Markazi+Text:wght@400..700&family=Roboto+Slab:wght@100..900&family=VT323&display=swap");
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+}
 
+/* Header Styles */
+.header {
+  width: 100%;
+  background: #ffffff;
+  box-shadow: var(--shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1));
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-top {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  padding: 12px 0;
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.logo-link i {
+  font-size: 36px;
+  color: #f59e0b;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-main {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.logo-sub {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.header-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.header-date i {
+  color: #f59e0b;
+}
+
+/* Messages/Alerts */
+.messages {
+  max-width: 1400px;
+  margin: 15px auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert i:first-child {
+  font-size: 22px;
+}
+
+.alert span {
+  flex: 1;
+}
+
+.alert-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.alert-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  color: #065f46;
+  border-left: 4px solid #10b981;
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  color: #991b1b;
+  border-left: 4px solid #ef4444;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 25px 20px;
+  width: 100%;
+  position: relative;
+}
+
+/* Loading Overlay */
 .blur-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
   display: none;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-.footer {
-  margin: 0;
-  padding: 0;
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
 }
 
 .spinner {
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   border: 4px solid #e2e8f0;
   border-top: 4px solid #2563eb;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
+.spinner-text {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-h1 {
-  display: none;
+/* Content Grid */
+.content-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr 300px;
+  gap: 25px;
+  align-items: start;
 }
 
-.header {
-  width: 100%;
-  margin-bottom: 15px;
+.sidebar {
+  position: sticky;
+  top: 140px;
+}
+
+.sidebar-left {
+  order: 1;
+}
+
+.news-main {
+  order: 2;
+}
+
+.sidebar-right {
+  order: 3;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  align-self: flex-start;
+  flex-direction: column;
+  gap: 20px;
 }
 
+/* Transitions */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.3s ease;
 }
 
 .fade-enter-from,
@@ -148,122 +366,74 @@ h1 {
   opacity: 0;
 }
 
-.divider {
-  color: #e2e8f0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-self: center;
-  width: 60%;
-  padding: 8px 0px;
-  margin-top: 70px;
-  border-color: #e2e8f0;
+/* Footer */
+.footer {
+  margin-top: auto;
 }
 
-.messages {
-  width: 90%;
-  max-width: 800px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-self: center;
-}
+/* Responsive */
+@media (max-width: 1200px) {
+  .content-grid {
+    grid-template-columns: 1fr 300px;
+  }
 
-.container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  color: #1e293b;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  align-self: flex-start;
-  padding: 0 15px;
-}
-
-.messages .alert {
-  font-family: "Markazi Text", serif;
-  font-size: 18px;
-  padding: 12px 30px;
-  border-radius: 10px;
-  border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.messages .alert-success {
-  background-color: #ecfdf5;
-  color: #065f46;
-}
-
-.messages .alert-danger {
-  background-color: #fef2f2;
-  color: #991b1b;
+  .sidebar-left {
+    display: none;
+  }
 }
 
 @media (max-width: 1024px) {
-  .live_iframe {
-    width: 0;
-    height: 0;
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar-right {
     display: none;
   }
 
-  header.header {
-    padding: 0;
-    height: 90px;
+  .header-top {
+    padding: 10px 0;
   }
 
-  .divider {
-    padding: 0;
-    margin-top: 100px;
-    display: block;
-    text-align: center;
-    width: 80%;
+  .logo-link i {
+    font-size: 28px;
   }
 
-  .container {
-    padding: 0 10px;
+  .logo-main {
+    font-size: 22px;
+  }
+
+  .logo-sub {
+    font-size: 10px;
   }
 }
 
 @media (max-width: 768px) {
-  .world_news {
+  .header-date {
     display: none;
   }
 
-  header.header {
-    margin-bottom: 40px;
-  }
-
-  .container {
-    width: 100%;
-    display: block;
-    padding: 0 10px;
-  }
-
-  h1 {
-    display: block;
-    width: 100%;
-    text-align: center;
-    margin-top: 30px;
-    font-family: "Roboto Condensed";
-    font-size: 28px;
-    color: #1e293b;
-    font-weight: 700;
-  }
-
-  .divider {
-    margin-top: 20px;
-    width: 90%;
+  .main-content {
+    padding: 15px 10px;
   }
 
   .messages {
-    width: 95%;
+    padding: 0 10px;
   }
 
-  .messages .alert {
-    font-size: 16px;
-    padding: 10px 20px;
+  .alert {
+    font-size: 14px;
+    padding: 12px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-sub {
+    display: none;
+  }
+
+  .logo-main {
+    font-size: 20px;
   }
 }
 </style>

@@ -1,436 +1,401 @@
 <template>
-  <div class='container' id='container_nav'>
-    <a class="menu" @click="openMenu"><i class="mdi mdi-menu"></i></a>
-    <a class="menu" @click="openMenu"><i class="mdi mdi-magnify"></i></a>
-    <a class="navbar-brand" href="#"><span>news</span><i class="mdi mdi-newspaper"></i></a>
-    <nav class="navbar navbar-expand-lg " :class="{ show: displayMenu }">
-      <div class='form-container'>
-        <form @submit.prevent="redir" action="/" method="get" class='form-search' name="search" id='search'>
-          <div class="row">
-            <div class="col-auto">
-              <input placeholder="Pesquisar" type="text" id="pesquisa_noticia" class="form-control " />
-            </div>
-            <div class="col-auto">
-              <button type="submit" class="btn btn-sm search">
-                <i class="mdi mdi-magnify"></i>
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
+  <div class="navbar-wrapper" id="container_nav">
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+      <button class="menu-toggle" @click="openMenu">
+        <i :class="displayMenu ? 'mdi mdi-close' : 'mdi mdi-menu'"></i>
+      </button>
+      <router-link to="/" class="mobile-logo">
+        <i class="mdi mdi-newspaper-variant-outline"></i>
+        <span>News</span>
+      </router-link>
+      <button class="search-toggle" @click="toggleSearch">
+        <i class="mdi mdi-magnify"></i>
+      </button>
+    </div>
 
-      <div class='items-navigation'>
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/">Início</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/">Geral</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/entertainment">Entretenimento</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/sports">Esportes</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/technology">Tecnologia</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/science">Ciência</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/business">Negócios</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/politics">Política</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/health">Saúde</RouterLink>
+    <!-- Main Navigation -->
+    <nav class="navbar" :class="{ show: displayMenu }">
+      <div class="nav-content">
+        <!-- Search Form -->
+        <div class="search-container" :class="{ 'mobile-show': showMobileSearch }">
+          <form @submit.prevent="redir" class="search-form">
+            <i class="mdi mdi-magnify"></i>
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Buscar notícias..."
+              class="search-input"
+            />
+            <button type="submit" class="search-btn">
+              Buscar
+            </button>
+          </form>
+        </div>
+
+        <!-- Nav Links -->
+        <ul class="nav-links">
+          <li v-for="link in navLinks" :key="link.path">
+            <router-link
+              :to="link.path"
+              class="nav-link"
+              @click="closeMenu"
+            >
+              <i :class="'mdi ' + link.icon"></i>
+              <span>{{ link.label }}</span>
+            </router-link>
           </li>
         </ul>
       </div>
     </nav>
+
+    <!-- Overlay -->
+    <div class="nav-overlay" :class="{ show: displayMenu }" @click="closeMenu"></div>
   </div>
 </template>
+
 <script>
 export default {
   name: "NavBar",
   data() {
     return {
-      languages: "pt,en,es",
-      displayMenu: false
+      displayMenu: false,
+      showMobileSearch: false,
+      searchQuery: '',
+      navLinks: [
+        { path: '/', label: 'Início', icon: 'mdi-home-outline' },
+        { path: '/entertainment', label: 'Entretenimento', icon: 'mdi-movie-open-outline' },
+        { path: '/sports', label: 'Esportes', icon: 'mdi-soccer' },
+        { path: '/technology', label: 'Tecnologia', icon: 'mdi-laptop' },
+        { path: '/science', label: 'Ciência', icon: 'mdi-flask-outline' },
+        { path: '/business', label: 'Negócios', icon: 'mdi-chart-line' },
+        { path: '/politics', label: 'Política', icon: 'mdi-bank-outline' },
+        { path: '/health', label: 'Saúde', icon: 'mdi-heart-pulse' }
+      ]
     };
   },
   methods: {
     openMenu() {
-      this.displayMenu = !this.displayMenu
+      this.displayMenu = !this.displayMenu;
+      document.body.style.overflow = this.displayMenu ? 'hidden' : '';
     },
     closeMenu() {
-      this.displayMenu = false
+      this.displayMenu = false;
+      document.body.style.overflow = '';
+    },
+    toggleSearch() {
+      this.showMobileSearch = !this.showMobileSearch;
     },
     redir() {
-      const querySearch = document.getElementById('pesquisa_noticia').value
+      if (!this.searchQuery.trim()) return;
 
-      document.getElementById('pesquisa_noticia').value = ""
-      try {
-        sessionStorage.setItem("nodata", true);
-        this.$router.push(
+      sessionStorage.setItem("nodata", true);
+      this.$router.push({
+        path: '/search',
+        query: { q: this.searchQuery }
+      });
 
-          {
-            path: '/search',
-            query: { q: querySearch }
-          }
-        )
-      } catch (error) {
-        console.error(error)
-      }
-    },
+      this.searchQuery = '';
+      this.closeMenu();
+      this.showMobileSearch = false;
+    }
   },
   mounted() {
     document.addEventListener('click', (e) => {
-      let navbar = document.getElementById('container_nav')
-      if (!navbar.contains(e.target)) {
-        this.closeMenu()
+      const navbar = document.getElementById('container_nav');
+      if (navbar && !navbar.contains(e.target)) {
+        this.closeMenu();
       }
-    })
+    });
   }
 };
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Jersey+25&family=Markazi+Text:wght@400..700&family=Roboto+Slab:wght@100..900&family=VT323&display=swap");
-
-nav.navbar {
-  width: 100%;
-  background-color: #ffffff;
-  color: #1e293b;
-  font-family: "Markazi Text", serif;
-  position: fixed;
-  overflow: hidden;
-  z-index: 10;
-  padding: 0px 150px;
-  margin-top: 26px;
-  display: flex;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+.navbar-wrapper {
+  background: #ffffff;
+  position: relative;
 }
 
-.navbar-brand span {
+/* Mobile Header */
+.mobile-header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #ffffff;
+}
+
+.menu-toggle,
+.search-toggle {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.menu-toggle:hover,
+.search-toggle:hover {
+  background: #f1f5f9;
+}
+
+.menu-toggle i,
+.search-toggle i {
+  font-size: 24px;
+  color: #1e293b;
+}
+
+.mobile-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #1e293b;
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.mobile-logo i {
+  font-size: 26px;
+  color: #f59e0b;
+}
+
+/* Main Navbar */
+.navbar {
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+}
+
+.nav-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+/* Search Container */
+.search-container {
+  flex-shrink: 0;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 6px 6px 6px 14px;
+  gap: 10px;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.search-form:focus-within {
+  background: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.search-form i {
+  color: #64748b;
+  font-size: 20px;
+}
+
+.search-input {
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 14px;
+  width: 200px;
+  color: #1e293b;
+}
+
+.search-input::placeholder {
+  color: #94a3b8;
+}
+
+.search-btn {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.search-btn:hover {
+  background: #1d4ed8;
+}
+
+/* Nav Links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  gap: 4px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 14px;
+  text-decoration: none;
+  color: #475569;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-link i {
+  font-size: 18px;
   display: none;
 }
 
-.navbar-brand {
-  width: 100%;
-  background-color: #ffffff;
-  color: #1e293b;
-  display: flex;
-  position: fixed;
-  flex-direction: column;
-  align-items: center;
-  align-self: center;
-  margin-top: -12px;
-  padding: 0;
-  z-index: 10;
-  overflow: hidden;
-}
-
-.form-container {
-  margin: 0px;
-  padding-right: 80px;
-}
-
-i {
-  color: #1e293b;
-}
-
-.navbar ul.navbar-nav li.nav-item .nav-link {
-  color: #1e293b;
-  margin-left: 8px;
-  font-size: 20px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-}
-
-.navbar ul.navbar-nav li.nav-item .nav-link:hover {
-  text-decoration: none;
-  background-color: rgba(37, 99, 235, 0.1);
+.nav-link:hover {
   color: #2563eb;
+  background: rgba(37, 99, 235, 0.08);
 }
 
-.navbar ul.navbar-nav li.nav-item .nav-link.router-link-active {
+.nav-link.router-link-exact-active {
   color: #2563eb;
+  background: rgba(37, 99, 235, 0.1);
   font-weight: 600;
 }
 
-.navbar .btn-sm.search i {
-  color: white;
-  font-size: 18px;
+/* Overlay */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 90;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.navbar .btn-sm.search {
-  background-color: #2563eb;
-  border-radius: 6px;
-  padding: 4px 12px;
-  transition: background-color 0.2s ease;
+.nav-overlay.show {
+  opacity: 1;
 }
 
-.navbar .btn-sm.search:hover {
-  background-color: #1d4ed8;
-}
+/* Responsive */
+@media (max-width: 1200px) {
+  .nav-link {
+    padding: 12px 10px;
+    font-size: 14px;
+  }
 
-input.form-control {
-  font-family: "Roboto Condensed";
-  font-size: 14px;
-  border-radius: 6px;
-  border: 1px solid #e2e8f0;
-  padding: 8px 12px;
-}
-
-input.form-control:focus {
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-  border-color: #2563eb;
-}
-
-.navbar-brand i.mdi {
-  font-size: 24px;
-  color: #2563eb;
-}
-
-.menu i.mdi {
-  font-size: 28px;
-  transition: color 0.2s ease;
-}
-
-.menu:hover i.mdi {
-  color: #2563eb;
+  .search-input {
+    width: 160px;
+  }
 }
 
 @media (max-width: 1024px) {
-  .form-container {
-    margin: 0px;
+  .mobile-header {
     display: flex;
-    width: 100%;
-    align-items: center;
-    padding: 10px;
-    align-self: center;
-    justify-content: center;
   }
 
-  .container {
-    min-width: 100%;
-    background-color: #ffffff;
-    height: 80px;
-    padding: 0;
-    margin: 0;
+  .navbar {
     position: fixed;
-    z-index: 50;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-  }
-
-  div.container nav.navbar {
-    height: 0;
-    width: 0;
-    position: fixed;
-    z-index: 50;
-  }
-
-  .navbar-brand {
-    background-color: transparent;
-    display: flex;
-    align-items: center;
-    align-self: center;
-    flex-direction: row;
-    font-size: 22px;
-    margin-left: 80px;
-    font-family: "Roboto Condensed";
-    margin-top: 0px;
-  }
-
-  .navbar-brand span {
-    display: flex;
-    font-weight: 700;
-    color: #1e293b;
-  }
-
-  .container span {
-    font-size: 32px;
-    margin-right: 10px;
-  }
-
-  .container i.mdi {
-    font-size: 40px;
-  }
-
-  a.menu {
-    text-align: left;
-    margin: 0;
-    padding: 8px;
-    margin: 2px 8px;
-    z-index: 50;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.2s ease;
-  }
-
-  a.menu:hover {
-    background-color: rgba(37, 99, 235, 0.1);
-  }
-
-  div.container nav.navbar.show {
-    display: flex;
-    align-items: flex-start;
-    align-self: flex-start;
-    justify-content: flex-start;
-    flex-direction: column;
-    width: 100%;
-    height: auto;
-    text-align: left;
-    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 320px;
+    height: 100vh;
     z-index: 100;
-    margin-top: 80px;
-    padding: 0;
-    transition: all 0.3s ease-in-out;
-    border-bottom: 3px solid #2563eb;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+    border-top: none;
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15);
   }
 
-  .navbar .items-navigation {
+  .navbar.show {
+    left: 0;
+  }
+
+  .nav-content {
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .search-container {
     width: 100%;
+    padding-top: 10px;
   }
 
-  .navbar .items-navigation ul.navbar-nav li.nav-item {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    width: 100%;
-  }
-
-  .navbar ul.navbar-nav li.nav-item .nav-link {
-    font-size: 32px;
-    text-decoration: none;
-    padding: 15px 20px;
+  .search-container.mobile-show {
     display: block;
   }
 
-  .navbar ul.navbar-nav li.nav-item .nav-link:hover {
-    background-color: rgba(37, 99, 235, 0.05);
-  }
-
-  input.form-control {
-    font-size: 18px;
-    margin: 0;
-    height: 50px;
-  }
-
-  div.container nav.navbar ul.navbar-nav {
-    display: flex;
-    flex-direction: column;
+  .search-form {
     width: 100%;
   }
 
-  .navbar .btn-sm.search i {
-    color: white;
-    font-size: 26px;
+  .search-input {
+    width: 100%;
+    flex: 1;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .nav-links li {
+    width: 100%;
+  }
+
+  .nav-link {
+    padding: 14px 16px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+
+  .nav-link i {
+    display: block;
+    font-size: 22px;
+    width: 28px;
+  }
+
+  .nav-overlay {
+    display: block;
+    pointer-events: none;
+  }
+
+  .nav-overlay.show {
+    pointer-events: auto;
   }
 }
 
-@media (max-width: 768px) {
-  div.container nav.navbar {
-    height: 0;
-    width: 0;
-  }
-
-  .navbar-brand i.mdi {
-    font-size: 28px;
-    padding: 2px 8px;
-  }
-
-  .container a.navbar-brand {
-    background-color: transparent;
-    display: inline-flex;
-    align-items: center;
-    align-self: center;
-    flex-direction: row;
-    font-size: 20px;
-    margin-left: 50px;
-    font-family: "Roboto Condensed";
-    margin-top: 0px;
-  }
-
-  .navbar-brand span {
-    display: inline-flex;
-    font-weight: 700;
-  }
-
-  a.menu {
-    text-align: left;
-    margin: 0;
-    padding: 6px;
-    margin: 2px 6px;
-    cursor: pointer;
-  }
-
-  div.container nav.navbar div.mx-auto,
-  div.container nav.navbar div.mx-auto ul.navbar-nav {
+@media (max-width: 480px) {
+  .navbar {
     width: 100%;
   }
 
-  nav.navbar .navbar-nav form#search .row .col-auto {
-    float: left;
-    width: 44%;
-    margin: 12px 8px;
+  .mobile-logo span {
+    display: none;
   }
 
-  .navbar .items-navigation {
-    width: 100%;
-    position: relative;
-  }
-
-  div.container nav.navbar.show {
-    align-items: flex-start;
-    align-self: flex-start;
-    justify-content: flex-start;
-    flex-direction: column;
-    width: 100%;
-    height: auto;
-    max-height: 80vh;
-    overflow-y: auto;
-    text-align: left;
-    position: absolute;
-    z-index: 100;
-    margin-top: 5px;
-    padding: 0;
-    transition: all 0.3s ease-in-out;
-    border-bottom: 3px solid #2563eb;
-  }
-
-  .navbar .items-navigation ul.navbar-nav li.nav-item {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  }
-
-  .navbar ul.navbar-nav li.nav-item .nav-link {
-    font-size: 24px;
-    text-decoration: none;
-    padding: 12px 18px;
-  }
-
-  input.form-control {
-    height: 42px;
-    width: 100%;
-  }
-
-  .container {
-    background-color: #ffffff;
-    position: fixed;
-    padding: 8px 0;
-    display: flex;
-    z-index: 100;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  }
-
-  .navbar .btn-sm.search i {
-    color: white;
-    font-size: 20px;
+  .mobile-logo i {
+    font-size: 30px;
   }
 }
 </style>
