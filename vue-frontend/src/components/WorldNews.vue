@@ -183,7 +183,7 @@ export default {
 }
 
 .news-link:hover .news-title {
-  color: #2563eb;
+  color: #f59e0b;
 }
 
 .news-meta {
@@ -196,7 +196,7 @@ export default {
 
 .news-source {
   font-weight: 500;
-  color: #2563eb;
+  color: #f59e0b;
 }
 
 .widget-footer {

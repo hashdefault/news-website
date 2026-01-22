@@ -402,7 +402,7 @@ export default {
 .carousel-indicators button.active {
   width: 30px;
   border-radius: 10px;
-  background: #2563eb;
+  background: #f59e0b;
 }
 
 .carousel-control {
@@ -424,7 +424,7 @@ export default {
 }
 
 .carousel-control:hover {
-  background: #2563eb;
+  background: #f59e0b;
   color: #ffffff;
 }
 
@@ -491,7 +491,7 @@ export default {
 }
 
 .news-item:hover .news-number {
-  color: #2563eb;
+  color: #f59e0b;
 }
 
 .news-item-content {
@@ -510,7 +510,7 @@ export default {
 }
 
 .news-item-title:hover {
-  color: #2563eb;
+  color: #f59e0b;
 }
 
 .news-item-meta {
@@ -579,7 +579,7 @@ export default {
 .highlight-source {
   font-size: 11px;
   font-weight: 600;
-  color: #2563eb;
+  color: #f59e0b;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -655,7 +655,7 @@ export default {
 
 .article-source i,
 .article-date i {
-  color: #2563eb;
+  color: #f59e0b;
 }
 
 .article-title {
@@ -678,7 +678,7 @@ export default {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #2563eb;
+  background: #f59e0b;
   color: #ffffff;
   text-decoration: none;
   padding: 12px 24px;
@@ -690,7 +690,7 @@ export default {
 }
 
 .article-btn:hover {
-  background: #1d4ed8;
+  background: #d97706;
   transform: translateX(5px);
 }
 

@@ -117,7 +117,7 @@ export default {
 
 /* Newsletter Section */
 .newsletter-section {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   padding: 40px 20px;
 }
 
@@ -262,7 +262,7 @@ export default {
 }
 
 .social-links a:hover {
-  background: #2563eb;
+  background: #f59e0b;
   color: #ffffff;
   transform: translateY(-3px);
 }

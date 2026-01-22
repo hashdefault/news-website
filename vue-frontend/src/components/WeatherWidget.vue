@@ -75,11 +75,11 @@ export default {
 
 <style scoped>
 .weather-widget {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   border-radius: 16px;
   padding: 20px;
   color: #ffffff;
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.3);
 }
 
 .weather-header {

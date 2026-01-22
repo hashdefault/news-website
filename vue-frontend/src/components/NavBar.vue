@@ -196,8 +196,8 @@ export default {
 
 .search-form:focus-within {
   background: #ffffff;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
 }
 
 .search-form i {
@@ -219,7 +219,7 @@ export default {
 }
 
 .search-btn {
-  background: #2563eb;
+  background: #f59e0b;
   color: #ffffff;
   border: none;
   padding: 8px 16px;
@@ -231,7 +231,7 @@ export default {
 }
 
 .search-btn:hover {
-  background: #1d4ed8;
+  background: #d97706;
 }
 
 /* Nav Links */
@@ -265,13 +265,13 @@ export default {
 }
 
 .nav-link:hover {
-  color: #2563eb;
-  background: rgba(37, 99, 235, 0.08);
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
 }
 
 .nav-link.router-link-exact-active {
-  color: #2563eb;
-  background: rgba(37, 99, 235, 0.1);
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
   font-weight: 600;
 }
 
