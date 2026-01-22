@@ -678,7 +678,7 @@ export default {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #f59e0b;
+  background: #d97706;
   color: #ffffff;
   text-decoration: none;
   padding: 12px 24px;
@@ -690,7 +690,7 @@ export default {
 }
 
 .article-btn:hover {
-  background: #d97706;
+  background: #b45309;
   transform: translateX(5px);
 }
 

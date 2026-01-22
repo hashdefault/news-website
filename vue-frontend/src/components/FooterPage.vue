@@ -117,7 +117,7 @@ export default {
 
 /* Newsletter Section */
 .newsletter-section {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
   padding: 40px 20px;
 }
 

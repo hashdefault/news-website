@@ -219,7 +219,7 @@ export default {
 }
 
 .search-btn {
-  background: #f59e0b;
+  background: #d97706;
   color: #ffffff;
   border: none;
   padding: 8px 16px;
@@ -231,7 +231,7 @@ export default {
 }
 
 .search-btn:hover {
-  background: #d97706;
+  background: #b45309;
 }
 
 /* Nav Links */

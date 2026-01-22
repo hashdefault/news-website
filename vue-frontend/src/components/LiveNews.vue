@@ -1,11 +1,7 @@
 <template>
   <div class="live-container">
-    <div class="live-badge" @click="loadStream" v-if="!showStream">
-      <span class="pulse"></span>
-      Ao Vivo - Clique para assistir
-    </div>
-    <div v-if="showStream" class="stream-wrapper">
-      <div class="live-badge active">
+    <div class="stream-wrapper">
+      <div class="live-badge">
         <span class="pulse"></span>
         Ao Vivo
       </div>
@@ -22,17 +18,7 @@
 </template>
 <script>
 export default {
-  name: "LiveNews",
-  data() {
-    return {
-      showStream: false
-    };
-  },
-  methods: {
-    loadStream() {
-      this.showStream = true;
-    }
-  }
+  name: "LiveNews"
 };
 </script>
 
@@ -62,31 +48,10 @@ iframe.live_news {
   font-size: 16px;
   font-weight: bold;
   color: #1e293b;
-  padding: 10px 16px;
-  border-radius: 8px;
-  position: relative;
-  font-family: "Roboto Condensed";
-  cursor: pointer;
-  background: #fafbfc;
-  border: 1px solid #e2e8f0;
-  transition: all 0.2s ease;
-}
-
-.live-badge:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-}
-
-.live-badge.active {
-  cursor: default;
-  background: transparent;
-  border: none;
   padding: 8px 0;
   margin-bottom: 8px;
-}
-
-.live-badge.active:hover {
-  background: transparent;
+  position: relative;
+  font-family: "Roboto Condensed";
 }
 
 .live-badge::before {
@@ -101,16 +66,12 @@ iframe.live_news {
 
 .pulse {
   position: absolute;
-  left: 14px;
+  left: -2px;
   width: 14px;
   height: 14px;
   background: rgba(239, 68, 68, 0.5);
   border-radius: 50%;
   animation: pulse 1.5s infinite ease-out;
-}
-
-.live-badge.active .pulse {
-  left: -2px;
 }
 
 @keyframes pulse {
