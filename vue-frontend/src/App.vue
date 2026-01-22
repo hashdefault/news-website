@@ -88,15 +88,14 @@ export default {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Jersey+25&family=Markazi+Text:wght@400..700&family=Roboto+Slab:wght@100..900&family=VT323&display=swap");
 
-
 .blur-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
   display: none;
   justify-content: center;
   align-items: center;
@@ -109,19 +108,18 @@ export default {
 }
 
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 6px solid rgba(0, 0, 0, 0.2);
-  border-top: 6px solid black;
+  width: 45px;
+  height: 45px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #2563eb;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
-
   100% {
     transform: rotate(360deg);
   }
@@ -133,7 +131,7 @@ h1 {
 
 .header {
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -142,7 +140,7 @@ h1 {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.8s ease;
+  transition: opacity 0.5s ease;
 }
 
 .fade-enter-from,
@@ -151,18 +149,20 @@ h1 {
 }
 
 .divider {
-  color: rgb(30, 30, 30, 0.9);
+  color: #e2e8f0;
   display: flex;
   justify-content: center;
   align-items: center;
   align-self: center;
-  width: 50%;
-  padding: 10px 0px;
+  width: 60%;
+  padding: 8px 0px;
   margin-top: 70px;
+  border-color: #e2e8f0;
 }
 
 .messages {
-  width: 80%;
+  width: 90%;
+  max-width: 800px;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -172,66 +172,98 @@ h1 {
 
 .container {
   width: 100%;
-  color: rgb(30, 30, 30, 0.9);
+  max-width: 1400px;
+  margin: 0 auto;
+  color: #1e293b;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   align-self: flex-start;
+  padding: 0 15px;
 }
 
 .messages .alert {
   font-family: "Markazi Text", serif;
-  font-size: 20px;
-  padding: 4px 80px;
+  font-size: 18px;
+  padding: 12px 30px;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-@media (max-width:1024px) {
+.messages .alert-success {
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+
+.messages .alert-danger {
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+@media (max-width: 1024px) {
   .live_iframe {
     width: 0;
     height: 0;
     display: none;
-
   }
 
   header.header {
     padding: 0;
-    height: 100px;
+    height: 90px;
   }
 
   .divider {
     padding: 0;
-    margin-top: 120px;
+    margin-top: 100px;
     display: block;
     text-align: center;
+    width: 80%;
   }
 
+  .container {
+    padding: 0 10px;
+  }
 }
 
-@media (max-width:768px) {
+@media (max-width: 768px) {
   .world_news {
     display: none;
   }
 
   header.header {
-    margin-bottom: 50px;
+    margin-bottom: 40px;
   }
 
   .container {
     width: 100%;
     display: block;
+    padding: 0 10px;
   }
 
   h1 {
     display: block;
     width: 100%;
     text-align: center;
-    margin-top: 40px;
+    margin-top: 30px;
     font-family: "Roboto Condensed";
-    font-size: 35px;
+    font-size: 28px;
+    color: #1e293b;
+    font-weight: 700;
   }
 
   .divider {
-    margin-top: 30px;
+    margin-top: 20px;
+    width: 90%;
+  }
+
+  .messages {
+    width: 95%;
+  }
+
+  .messages .alert {
+    font-size: 16px;
+    padding: 10px 20px;
   }
 }
 </style>

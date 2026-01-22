@@ -4,9 +4,33 @@ session_start();
 
 require __DIR__ . '/../functions.php';
 
-header("Access-Control-Allow-Origin: https://news.bitsbylucas.com");
+// CORS configuration - permite localhost para desenvolvimento
+$allowedOrigins = [
+  'https://news.bitsbylucas.com',
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:3000'
+];
+
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+
+if (in_array($origin, $allowedOrigins)) {
+  header("Access-Control-Allow-Origin: $origin");
+} else {
+  header("Access-Control-Allow-Origin: https://news.bitsbylucas.com");
+}
+
 header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json");
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+  http_response_code(200);
+  exit();
+}
 
 
 loadEnv(__DIR__ . '/../.env');
@@ -73,12 +97,21 @@ if (key_exists($categories, $_SESSION) and $_SESSION[$categories][$language] and
       $results = array_merge($response['results'], $results);
     }
   }
-  if (empty($_SESSION[$categories][$language]) and !empty($results)) {
+  if (!empty($results)) {
     $_SESSION[$categories][$language]['results'] = $results;
+    $_SESSION[$categories][$language]['status'] = 'success';
     echo json_encode($_SESSION[$categories][$language]);
-  } else if (empty($results)) {
-    echo json_encode(array("error" => 'Nenhuma notícia encontrada.'));
-  } else if ($response['error']) {
-    echo json_encode($response);
+  } else if (isset($response['error'])) {
+    echo json_encode(array(
+      "status" => "error",
+      "error" => $response['error']['message'] ?? 'Erro na API externa',
+      "message" => $response['error']['message'] ?? 'Erro na API externa'
+    ));
+  } else {
+    echo json_encode(array(
+      "status" => "error",
+      "error" => 'Nenhuma notícia encontrada.',
+      "message" => 'Nenhuma notícia encontrada.'
+    ));
   }
 }

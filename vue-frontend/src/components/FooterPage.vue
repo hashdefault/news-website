@@ -52,13 +52,15 @@ hr {
   align-items: center;
   align-self: center;
   justify-content: center;
+  border-color: #e2e8f0;
 }
 
 h5 {
   text-align: center;
   width: 100%;
-  font-size: 35px;
+  font-size: 32px;
   font-family: "Markazi Text", serif;
+  color: #1e293b;
 }
 
 p {
@@ -67,7 +69,7 @@ p {
   align-self: center;
   justify-content: center;
   font-family: "Markazi Text", serif;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .container-footer #newsletter_form .col-md-7 {
@@ -75,71 +77,104 @@ p {
 }
 
 .container-footer i.mdi {
-  font-size: 20px;
+  font-size: 18px;
+  color: #2563eb;
 }
 
 .container-footer #newsletter_form {
   width: 100%;
-  margin-top: 25px;
-  margin-bottom: 80px;
-  border: 1px solid rgb(0, 0, 0, 0.2);
-  border-radius: 10px;
-  padding: 20px;
+  max-width: 600px;
+  margin: 25px auto 60px auto;
+  border: none;
+  border-radius: 16px;
+  padding: 30px;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .rights {
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #94a3b8;
   margin: 0;
-  padding: 30px;
+  padding: 25px;
+  font-size: 14px;
 }
 
 .container-footer {
   width: 100%;
-  margin-top: 50px;
+  margin-top: 60px;
   flex-direction: column;
-
+  padding: 0 20px;
 }
 
 .btn-span {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .btn.cadastrar_news:hover {
-  background-color: rgb(0, 0, 0, 0.8);
+  background-color: #2563eb;
+  border-color: #2563eb;
   color: white;
+  transform: translateY(-2px);
 }
 
 .btn.cadastrar_news {
-  border: 3px solid rgb(0, 0, 0, 0.8);
-  border-radius: 0;
+  border: 2px solid #1e293b;
+  border-radius: 8px;
   display: flex;
   align-items: center;
-
-
+  padding: 10px 24px;
+  font-family: "Roboto Condensed";
+  transition: all 0.3s ease;
 }
 
 .row {
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 input.form-control:focus {
-  box-shadow: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  border-color: #2563eb;
 }
 
 input.form-control {
-  border: 1px solid black;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 15px;
 }
 
+label.form-label {
+  font-family: "Roboto Condensed";
+  font-weight: 500;
+  color: #475569;
+  margin-bottom: 6px;
+}
 
-@media (max-width:768px) {
+@media (max-width: 768px) {
   .container .container-footer {
     display: block;
   }
 
   .container .container-footer #newsletter_form {
     display: block;
+    padding: 20px;
+    margin: 20px 10px 40px 10px;
+  }
+
+  h5 {
+    font-size: 26px;
+  }
+
+  .btn.cadastrar_news {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .rights {
+    padding: 20px;
+    font-size: 13px;
   }
 }
 </style>

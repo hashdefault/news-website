@@ -88,10 +88,9 @@ export default {
     },
   },
   mounted() {
-    document.addEventListener('click',  (e) => {
+    document.addEventListener('click', (e) => {
       let navbar = document.getElementById('container_nav')
       if (!navbar.contains(e.target)) {
-        console.log('oi')
         this.closeMenu()
       }
     })
@@ -102,18 +101,18 @@ export default {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Jersey+25&family=Markazi+Text:wght@400..700&family=Roboto+Slab:wght@100..900&family=VT323&display=swap");
 
-
 nav.navbar {
   width: 100%;
-  background-color: rgb(250, 250, 250);
-  color: rgb(10, 10, 10);
+  background-color: #ffffff;
+  color: #1e293b;
   font-family: "Markazi Text", serif;
   position: fixed;
   overflow: hidden;
   z-index: 10;
-  padding: 0px 200px;
+  padding: 0px 150px;
   margin-top: 26px;
   display: flex;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .navbar-brand span {
@@ -122,8 +121,8 @@ nav.navbar {
 
 .navbar-brand {
   width: 100%;
-  background-color: rgb(250, 250, 250);
-  color: rgb(10, 10, 10);
+  background-color: #ffffff;
+  color: #1e293b;
   display: flex;
   position: fixed;
   flex-direction: column;
@@ -137,76 +136,97 @@ nav.navbar {
 
 .form-container {
   margin: 0px;
-  padding-right: 120px;
+  padding-right: 80px;
 }
 
-
 i {
-  color: rgb(10, 10, 10);
+  color: #1e293b;
 }
 
 .navbar ul.navbar-nav li.nav-item .nav-link {
-  color: rgb(10, 10, 10);
-  margin-left: 10px;
-  font-size: 22px;
+  color: #1e293b;
+  margin-left: 8px;
+  font-size: 20px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
 }
 
 .navbar ul.navbar-nav li.nav-item .nav-link:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  background-color: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
+}
+
+.navbar ul.navbar-nav li.nav-item .nav-link.router-link-active {
+  color: #2563eb;
+  font-weight: 600;
 }
 
 .navbar .btn-sm.search i {
   color: white;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .navbar .btn-sm.search {
-  background-color: rgb(0, 0, 0, 0.3);
-  border-radius: 3px;
-  padding: 0 8px;
+  background-color: #2563eb;
+  border-radius: 6px;
+  padding: 4px 12px;
+  transition: background-color 0.2s ease;
+}
+
+.navbar .btn-sm.search:hover {
+  background-color: #1d4ed8;
 }
 
 input.form-control {
   font-family: "Roboto Condensed";
-  font-size: 13px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  padding: 8px 12px;
 }
 
 input.form-control:focus {
-  box-shadow: none;
-  border-color: black;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  border-color: #2563eb;
 }
 
 .navbar-brand i.mdi {
-  font-size: 22px;
+  font-size: 24px;
+  color: #2563eb;
 }
 
 .menu i.mdi {
-  font-size: 30px;
+  font-size: 28px;
+  transition: color 0.2s ease;
+}
+
+.menu:hover i.mdi {
+  color: #2563eb;
 }
 
 @media (max-width: 1024px) {
-
-
   .form-container {
     margin: 0px;
     display: flex;
     width: 100%;
     align-items: center;
-    padding: 5px;
+    padding: 10px;
     align-self: center;
     justify-content: center;
   }
 
   .container {
     min-width: 100%;
-    background-color: rgb(250, 250, 250);
-    height: 100px;
+    background-color: #ffffff;
+    height: 80px;
     padding: 0;
     margin: 0;
     position: fixed;
     z-index: 50;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
   }
-
 
   div.container nav.navbar {
     height: 0;
@@ -215,44 +235,47 @@ input.form-control:focus {
     z-index: 50;
   }
 
-
   .navbar-brand {
     background-color: transparent;
     display: flex;
     align-items: center;
     align-self: center;
     flex-direction: row;
-    font-size: 24px;
-    margin-left: 100px;
+    font-size: 22px;
+    margin-left: 80px;
     font-family: "Roboto Condensed";
     margin-top: 0px;
   }
 
   .navbar-brand span {
     display: flex;
-    font-weight: bold;
+    font-weight: 700;
+    color: #1e293b;
   }
 
   .container span {
-
-    font-size: 40px;
-    margin-right: 15px;
+    font-size: 32px;
+    margin-right: 10px;
   }
 
   .container i.mdi {
-    font-size: 50px;
+    font-size: 40px;
   }
 
   a.menu {
     text-align: left;
     margin: 0;
-    padding: 5px;
-    margin: 2px 10px;
+    padding: 8px;
+    margin: 2px 8px;
     z-index: 50;
     cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
   }
 
-
+  a.menu:hover {
+    background-color: rgba(37, 99, 235, 0.1);
+  }
 
   div.container nav.navbar.show {
     display: flex;
@@ -265,10 +288,11 @@ input.form-control:focus {
     text-align: left;
     position: absolute;
     z-index: 100;
-    margin-top: 90px;
+    margin-top: 80px;
     padding: 0;
-    transition: width 0.5s ease-in-out;
-    border-bottom: 5px solid black;
+    transition: all 0.3s ease-in-out;
+    border-bottom: 3px solid #2563eb;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   }
 
   .navbar .items-navigation {
@@ -276,20 +300,25 @@ input.form-control:focus {
   }
 
   .navbar .items-navigation ul.navbar-nav li.nav-item {
-    border-bottom: 1px solid rgb(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     width: 100%;
   }
 
-
   .navbar ul.navbar-nav li.nav-item .nav-link {
-    font-size: 60px;
-    text-decoration: underline;
+    font-size: 32px;
+    text-decoration: none;
+    padding: 15px 20px;
+    display: block;
+  }
+
+  .navbar ul.navbar-nav li.nav-item .nav-link:hover {
+    background-color: rgba(37, 99, 235, 0.05);
   }
 
   input.form-control {
-    font-size: 20px;
+    font-size: 18px;
     margin: 0;
-    height: 55px;
+    height: 50px;
   }
 
   div.container nav.navbar ul.navbar-nav {
@@ -298,23 +327,21 @@ input.form-control:focus {
     width: 100%;
   }
 
-
   .navbar .btn-sm.search i {
     color: white;
-    font-size: 32px;
+    font-size: 26px;
   }
-
 }
 
-@media (max-width:768px) {
+@media (max-width: 768px) {
   div.container nav.navbar {
     height: 0;
     width: 0;
   }
 
   .navbar-brand i.mdi {
-    font-size: 30px;
-    padding: 2px 10px;
+    font-size: 28px;
+    padding: 2px 8px;
   }
 
   .container a.navbar-brand {
@@ -323,23 +350,22 @@ input.form-control:focus {
     align-items: center;
     align-self: center;
     flex-direction: row;
-    font-size: 24px;
-    margin-left: 70px;
+    font-size: 20px;
+    margin-left: 50px;
     font-family: "Roboto Condensed";
     margin-top: 0px;
   }
 
   .navbar-brand span {
     display: inline-flex;
-    font-weight: bold;
+    font-weight: 700;
   }
-
 
   a.menu {
     text-align: left;
     margin: 0;
-    padding: 5px;
-    margin: 2px 10px;
+    padding: 6px;
+    margin: 2px 6px;
     cursor: pointer;
   }
 
@@ -351,9 +377,8 @@ input.form-control:focus {
   nav.navbar .navbar-nav form#search .row .col-auto {
     float: left;
     width: 44%;
-    margin: 15px 10px;
+    margin: 12px 8px;
   }
-
 
   .navbar .items-navigation {
     width: 100%;
@@ -366,42 +391,46 @@ input.form-control:focus {
     justify-content: flex-start;
     flex-direction: column;
     width: 100%;
-    height: 700px;
+    height: auto;
+    max-height: 80vh;
+    overflow-y: auto;
     text-align: left;
     position: absolute;
     z-index: 100;
-    margin-top: 7px;
+    margin-top: 5px;
     padding: 0;
-    transition: width 0.5s ease-in-out;
-    border-bottom: 5px solid black;
+    transition: all 0.3s ease-in-out;
+    border-bottom: 3px solid #2563eb;
   }
 
   .navbar .items-navigation ul.navbar-nav li.nav-item {
-    border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   }
 
   .navbar ul.navbar-nav li.nav-item .nav-link {
-    font-size: 28px;
-    text-decoration: underline;
+    font-size: 24px;
+    text-decoration: none;
+    padding: 12px 18px;
   }
 
   input.form-control {
-    height: 40px;
+    height: 42px;
     width: 100%;
   }
 
   .container {
-    background-color: rgb(250, 250, 250);
+    background-color: #ffffff;
     position: fixed;
-    padding: 5px 0;
+    padding: 8px 0;
     display: flex;
     z-index: 100;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   }
 
   .navbar .btn-sm.search i {
     color: white;
-    font-size: 23px;
+    font-size: 20px;
   }
 }
 </style>

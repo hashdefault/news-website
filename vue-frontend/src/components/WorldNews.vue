@@ -54,17 +54,28 @@ export default {
             credentials: 'include'
           }
         );
-        const datas = await response.json();
-        if (datas.status == 'error') {
-          throw new Error(datas.results.message)
-        }
-        if (datas) {
-          var noticias = datas.results;
-          this.news = noticias.slice(0, 5);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
+        const datas = await response.json();
+
+        if (datas.error) {
+          console.warn('API Error:', datas.error);
+          return;
+        }
+
+        if (datas.status === 'error') {
+          throw new Error(datas.message || 'Erro desconhecido');
+        }
+
+        if (datas && datas.results && datas.results.length > 0) {
+          const noticias = datas.results;
+          this.news = noticias.slice(0, 5);
+        }
       } catch (error) {
-        console.error(error)
+        console.error('Erro ao buscar notícias mundiais:', error);
       }
     },
   },
@@ -78,130 +89,169 @@ section {
   display: flex;
   justify-content: flex-start;
   margin-left: 0px;
-  border-right: 1px solid black;
-  margin-top: 50px;
+  border-right: none;
+  margin-top: 40px;
+  padding-right: 15px;
 }
 
 p.data_info_title:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  color: #2563eb;
 }
 
 p.data_info_title {
-  line-height: 1.1em;
+  line-height: 1.2em;
   float: left;
-  margin-left: 3px;
+  margin-left: 5px;
   max-width: 200px;
-  font-size: 17px;
+  font-size: 16px;
   width: 90%;
-  margin-top: -15px;
+  margin-top: -12px;
+  color: #1e293b;
+  transition: color 0.2s ease;
 }
 
 h4 {
   font-family: "Markazi Text", serif;
-  margin-left: 25px;
-  font-size: 28px;
-  border-left: 5px solid rgba(0, 0, 0, 0.8);
-  color: rgba(0, 0, 0, 0.8);
-  padding-left: 10px;
-  height: 20px;
+  margin-left: 15px;
+  font-size: 26px;
+  border-left: 4px solid #2563eb;
+  color: #1e293b;
+  padding-left: 12px;
+  height: auto;
   display: flex;
   align-items: center;
   align-self: center;
+  margin-bottom: 15px;
 }
 
 p.data_info {
   float: left;
-  margin-left: 3px;
+  margin-left: 5px;
   max-width: 200px;
-  color: rgba(50, 50, 50, 0.5);
+  color: #64748b;
   font-family: "Roboto Condensed";
   font-size: 11px;
 }
 
 .right-news ul li {
   overflow: hidden;
+  padding: 12px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  transition: background-color 0.2s ease;
+}
+
+.right-news ul li:hover {
+  background-color: rgba(37, 99, 235, 0.03);
+}
+
+.right-news ul li:last-child {
+  border-bottom: none;
 }
 
 .right-news ul {
   height: 100%;
   overflow: hidden;
+  padding: 0;
 }
 
 .right-news {
   font-family: "Markazi Text", serif;
   width: 100%;
   float: left;
+  background: #fafbfc;
+  border-radius: 12px;
+  padding: 15px;
 }
 
 .list-notice-img:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .list-notice-img a.link_url {
   display: block;
   text-decoration: none;
-  color: rgb(30, 30, 30, 0.9);
-  padding: 2px 0;
-  font-size: 18px;
+  color: #1e293b;
+  padding: 4px 0;
+  font-size: 17px;
   overflow: hidden;
 }
 
 .list-notice-img img {
-  border-radius: 3px;
+  border-radius: 8px;
   float: left;
-  width: 150px;
+  width: 130px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 10px;
+  transition: transform 0.2s ease;
+}
+
+.list-notice-img:hover img {
+  transform: scale(1.03);
 }
 
 .list-notice-img {
   list-style-type: none;
   text-decoration: none;
-  color: rgb(30, 30, 30, 0.9);
+  color: #1e293b;
   padding: 5px 0;
   width: 100%;
 }
 
 .list-notice .link_url:hover {
-  text-decoration: underline;
+  color: #2563eb;
 }
 
 .list-notice .link_url {
-  color: rgb(30, 30, 30, 0.9);
+  color: #1e293b;
   text-decoration: none;
   width: 100%;
+  transition: color 0.2s ease;
 }
 
 .link-rounded img {
-  border: 3px solid transparent;
-  border-radius: 5px;
+  border: none;
+  border-radius: 8px;
 }
 
-@media(max-width:1024px) {
+@media (max-width: 1024px) {
   section {
     display: block;
-    padding:0;
-    margin-top:20px;
+    padding: 0;
+    margin-top: 20px;
     width: 100%;
   }
 
   section .right-news {
     display: block;
-    padding:0;
-    margin:0;
+    padding: 10px;
+    margin: 0;
     width: 100%;
   }
 }
 
-@media (max-width:768px) {
+@media (max-width: 768px) {
   section {
     display: block;
     width: 100%;
+    padding-right: 0;
   }
 
   section .right-news {
     display: block;
     width: 100%;
-
+    border-radius: 10px;
   }
 
+  h4 {
+    font-size: 24px;
+    margin-left: 10px;
+  }
+
+  .list-notice-img img {
+    width: 100px;
+    height: 65px;
+  }
 }
 </style>
